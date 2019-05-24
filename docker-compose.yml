@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  dump1090:
+    build: ./dump1090-fa
+    container_name: dump1090
+    ports:
+     - "8080:8080"
+     - "30003:30003"
+     - "30005:30005"
+     - "30104:30104"
+    environment:
+      - DUMP_HTTP_PORT=8080
+      - DUMP_SBS_PORT=30003
+      - DUMP_LAT=40.786289
+      - DUMP_LON=-73.421283
+    devices:
+      - /dev/bus/usb
+    restart: unless-stopped
+  flightradar:
+    build: ./fr24feed
+    container_name: flightradar24
+    ports:
+     - "8754:8754"
+    environment:
+      - DUMP1090_HOST=dump1090
+      - DUMP1090_PORT=30005
+      - FR24_KEY=
+    restart: always
